@@ -6,13 +6,32 @@ import '../main.dart';
 
 // This task defines logic for playing a list of podcast episodes.
 class AudioPlayerTask extends BackgroundAudioTask {
-  final _mediaLibrary = MediaLibrary();
+  MediaLibrary mediaLibrary = MediaLibrary();
   AudioPlayer _player = new AudioPlayer();
   AudioProcessingState? _skipState;
   Seeker? _seeker;
   late StreamSubscription<PlaybackEvent> _eventSubscription;
-
-  List<MediaItem> get queue => _mediaLibrary.items;
+  List<MediaItem> queue = <MediaItem>[
+    MediaItem(
+      // This can be any unique id, but we use the audio URL for convenience.
+      id: "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
+      album: "Science Friday",
+      title: "A Salute To Head-Scratching Science",
+      artist: "Science Friday and WNYC Studios",
+      duration: Duration(milliseconds: 5739820),
+      artUri: Uri.parse(
+          "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
+    ),
+    MediaItem(
+      id: "https://s3.amazonaws.com/scifri-segments/scifri201711241.mp3",
+      album: "Science Friday",
+      title: "From Cat Rheology To Operatic Incompetence",
+      artist: "Science Friday and WNYC Studios",
+      duration: Duration(milliseconds: 2856950),
+      artUri: Uri.parse(
+          "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
+    ),
+  ];
   int? get index => _player.currentIndex;
   MediaItem? get mediaItem => index == null ? null : queue[index!];
 
@@ -21,6 +40,8 @@ class AudioPlayerTask extends BackgroundAudioTask {
     // We configure the audio session for speech since we're playing a podcast.
     // You can also put this in your app's initialisation if your app doesn't
     // switch between two types of audio as this example does.
+    print(
+        'Play Play Play PLay ${queue.length} ${queue.length} ${queue.length} ${queue.length}');
     final session = await AudioSession.instance;
     await session.configure(AudioSessionConfiguration.speech());
     // Broadcast media item changes.
@@ -48,7 +69,29 @@ class AudioPlayerTask extends BackgroundAudioTask {
       }
     });
 
+    onUpdateQueue(queue);
+
+    // // Load and broadcast the queue
+    // AudioServiceBackground.setQueue(queue);
+    // try {
+    //   await _player.setAudioSource(ConcatenatingAudioSource(
+    //     children:
+    //         queue.map((item) => AudioSource.uri(Uri.parse(item.id))).toList(),
+    //   ));
+    //   // In this example, we automatically start playing on start.
+    //   onPlay();
+    // } catch (e) {
+    //   print("Error: $e");
+    //   onStop();
+    // }
+  }
+
+  @override
+  Future<void> onUpdateQueue(List<MediaItem> updatedQueue) async {
+    queue = updatedQueue;
     // Load and broadcast the queue
+    print(
+        'Update Update Update Update ${queue.length} ${queue.length} ${queue.length} ${queue.length}');
     AudioServiceBackground.setQueue(queue);
     try {
       await _player.setAudioSource(ConcatenatingAudioSource(
@@ -61,6 +104,7 @@ class AudioPlayerTask extends BackgroundAudioTask {
       print("Error: $e");
       onStop();
     }
+    return super.onUpdateQueue(updatedQueue);
   }
 
   @override
@@ -180,5 +224,35 @@ class AudioPlayerTask extends BackgroundAudioTask {
       default:
         throw Exception("Invalid state: ${_player.processingState}");
     }
+  }
+}
+
+class Seeker {
+  final AudioPlayer player;
+  final Duration positionInterval;
+  final Duration stepInterval;
+  final MediaItem mediaItem;
+  bool _running = false;
+
+  Seeker(
+    this.player,
+    this.positionInterval,
+    this.stepInterval,
+    this.mediaItem,
+  );
+
+  start() async {
+    _running = true;
+    while (_running) {
+      Duration newPosition = player.position + positionInterval;
+      if (newPosition < Duration.zero) newPosition = Duration.zero;
+      if (newPosition > mediaItem.duration!) newPosition = mediaItem.duration!;
+      player.seek(newPosition);
+      await Future.delayed(stepInterval);
+    }
+  }
+
+  stop() {
+    _running = false;
   }
 }
