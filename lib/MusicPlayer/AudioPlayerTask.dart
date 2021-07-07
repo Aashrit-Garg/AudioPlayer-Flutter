@@ -2,16 +2,23 @@ import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:just_audio/just_audio.dart';
-import '../main.dart';
 
 // This task defines logic for playing a list of podcast episodes.
 class AudioPlayerTask extends BackgroundAudioTask {
-  MediaLibrary mediaLibrary = MediaLibrary();
   AudioPlayer _player = new AudioPlayer();
   AudioProcessingState? _skipState;
   Seeker? _seeker;
   late StreamSubscription<PlaybackEvent> _eventSubscription;
   List<MediaItem> queue = <MediaItem>[
+    MediaItem(
+      id: "https://s3.amazonaws.com/scifri-segments/scifri201711241.mp3",
+      album: "Science Friday",
+      title: "From Cat Rheology To Operatic Incompetence",
+      artist: "Science Friday and WNYC Studios",
+      duration: Duration(milliseconds: 2856950),
+      artUri: Uri.parse(
+          "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
+    ),
     MediaItem(
       // This can be any unique id, but we use the audio URL for convenience.
       id: "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
@@ -19,15 +26,6 @@ class AudioPlayerTask extends BackgroundAudioTask {
       title: "A Salute To Head-Scratching Science",
       artist: "Science Friday and WNYC Studios",
       duration: Duration(milliseconds: 5739820),
-      artUri: Uri.parse(
-          "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
-    ),
-    MediaItem(
-      id: "https://s3.amazonaws.com/scifri-segments/scifri201711241.mp3",
-      album: "Science Friday",
-      title: "From Cat Rheology To Operatic Incompetence",
-      artist: "Science Friday and WNYC Studios",
-      duration: Duration(milliseconds: 2856950),
       artUri: Uri.parse(
           "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
     ),
@@ -70,25 +68,12 @@ class AudioPlayerTask extends BackgroundAudioTask {
     });
 
     onUpdateQueue(queue);
-
-    // // Load and broadcast the queue
-    // AudioServiceBackground.setQueue(queue);
-    // try {
-    //   await _player.setAudioSource(ConcatenatingAudioSource(
-    //     children:
-    //         queue.map((item) => AudioSource.uri(Uri.parse(item.id))).toList(),
-    //   ));
-    //   // In this example, we automatically start playing on start.
-    //   onPlay();
-    // } catch (e) {
-    //   print("Error: $e");
-    //   onStop();
-    // }
   }
 
   @override
   Future<void> onUpdateQueue(List<MediaItem> updatedQueue) async {
     queue = updatedQueue;
+    await AudioServiceBackground.setMediaItem(queue[0]);
     // Load and broadcast the queue
     print(
         'Update Update Update Update ${queue.length} ${queue.length} ${queue.length} ${queue.length}');

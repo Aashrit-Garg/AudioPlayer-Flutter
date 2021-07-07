@@ -1,12 +1,7 @@
 import 'dart:async';
-import 'dart:io' show Platform;
-import 'dart:math';
 import 'package:audio_service/audio_service.dart';
-import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 import 'MusicPlayer/AudioPlayerTask.dart';
 import 'MusicPlayer/SeekBar.dart';
@@ -176,7 +171,7 @@ class MainScreen extends StatelessWidget {
                       List<MediaItem> items = <MediaItem>[
                         MediaItem(
                           // This can be any unique id, but we use the audio URL for convenience.
-                          id: "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
+                          id: "https://play.hubhopper.com/09aa4ee91394260412137864afc4f805.mp3?s=rss-feed",
                           album: "Science Friday",
                           title: "A",
                           artist: "Science Friday and WNYC Studios",
@@ -185,7 +180,7 @@ class MainScreen extends StatelessWidget {
                               "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
                         ),
                         MediaItem(
-                          id: "https://s3.amazonaws.com/scifri-segments/scifri201711241.mp3",
+                          id: "https://play.hubhopper.com/de92a68aec4bc3ecd6f1948b06fb96f6.mp3?s=rss-feed",
                           album: "Science Friday",
                           title: "B",
                           artist: "Science Friday and WNYC Studios",
@@ -369,32 +364,4 @@ class MediaState {
 // NOTE: Your entrypoint MUST be a top-level function.
 void _audioPlayerTaskEntrypoint() async {
   AudioServiceBackground.run(() => AudioPlayerTask());
-}
-
-// Provides access to a library of media items. In your app, this could come
-// from a database or web service.
-class MediaLibrary {
-  final _items = <MediaItem>[
-    MediaItem(
-      // This can be any unique id, but we use the audio URL for convenience.
-      id: "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
-      album: "Science Friday",
-      title: "A Salute To Head-Scratching Science",
-      artist: "Science Friday and WNYC Studios",
-      duration: Duration(milliseconds: 5739820),
-      artUri: Uri.parse(
-          "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
-    ),
-    MediaItem(
-      id: "https://s3.amazonaws.com/scifri-segments/scifri201711241.mp3",
-      album: "Science Friday",
-      title: "From Cat Rheology To Operatic Incompetence",
-      artist: "Science Friday and WNYC Studios",
-      duration: Duration(milliseconds: 2856950),
-      artUri: Uri.parse(
-          "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
-    ),
-  ];
-
-  List<MediaItem> get items => _items;
 }
