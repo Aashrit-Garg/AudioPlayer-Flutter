@@ -11,21 +11,31 @@ class AudioPlayerTask extends BackgroundAudioTask {
   late StreamSubscription<PlaybackEvent> _eventSubscription;
   List<MediaItem> queue = <MediaItem>[
     MediaItem(
-      id: "https://s3.amazonaws.com/scifri-segments/scifri201711241.mp3",
+      id: "https://play.hubhopper.com/f77fdadea83a7be9a25e4a8f6bc556b7.mp3?s=rss-feed",
       album: "Science Friday",
       title: "From Cat Rheology To Operatic Incompetence",
       artist: "Science Friday and WNYC Studios",
-      duration: Duration(milliseconds: 2856950),
+      duration: Duration(seconds: 3887),
       artUri: Uri.parse(
           "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
     ),
     MediaItem(
       // This can be any unique id, but we use the audio URL for convenience.
-      id: "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
+      id: "https://play.hubhopper.com/c384ed8e98792ef010b91ef8a4eea38b.mp3?s=rss-feed",
       album: "Science Friday",
       title: "A Salute To Head-Scratching Science",
       artist: "Science Friday and WNYC Studios",
-      duration: Duration(milliseconds: 5739820),
+      duration: Duration(seconds: 419),
+      artUri: Uri.parse(
+          "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
+    ),
+    MediaItem(
+      // This can be any unique id, but we use the audio URL for convenience.
+      id: "https://play.hubhopper.com/56dbb053b06b4d9d7e2b5c543dc57f50.mp3?s=rss-feed",
+      album: "Science Friday",
+      title: "A Salute To Head-Scratching Science",
+      artist: "Science Friday and WNYC Studios",
+      duration: Duration(seconds: 490),
       artUri: Uri.parse(
           "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
     ),
