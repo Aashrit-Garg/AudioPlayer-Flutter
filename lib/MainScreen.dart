@@ -158,11 +158,11 @@ class MainScreen extends StatelessWidget {
                       List<MediaItem> items = <MediaItem>[
                         MediaItem(
                           // This can be any unique id, but we use the audio URL for convenience.
-                          id: "https://play.hubhopper.com/09aa4ee91394260412137864afc4f805.mp3?s=rss-feed",
+                          id: "https://radioindia.net/radio/radio-city/icecast.audio",
                           album: "Science Friday",
                           title: "A",
                           artist: "Science Friday and WNYC Studios",
-                          duration: Duration(milliseconds: 5739820),
+                          duration: Duration(milliseconds: 1000),
                           artUri: Uri.parse(
                               "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
                         ),
